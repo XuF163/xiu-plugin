@@ -1,5 +1,12 @@
 import fs from 'node:fs'
-
+import Database from '../../plugins/xiu-plugin/lib/sql.js'
+// 自动连接数据库
+try {
+    await Database.connect();  // 确保在加载插件前连接数据库
+    console.log('Database connected on startup');
+} catch (error) {
+    console.error('Failed to connect to the database on startup:', error.message);
+}
 const files = fs.readdirSync('./plugins/xiu-plugin/apps').filter(file => file.endsWith('.js'))
 
 let ret = []

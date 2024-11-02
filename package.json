@@ -1,0 +1,17 @@
+{
+  "name": "xiu-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XuF163/xiu-plugin.git"
+  },
+  "private": true,
+  "dependencies": {
+    "mysql2": "^3.11.3"
+  }
+}
