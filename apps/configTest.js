@@ -1,6 +1,6 @@
-
-import Config from '../../../plugins/xiu-plugin/lib/config.js'
-import Database from '../../../plugins/xiu-plugin/lib/sql.js';
+// import Config from '../../../plugins/xiu-plugin/lib/config.js'
+// import Database from '../../../plugins/xiu-plugin/lib/sql.js';
+import xiu from   '../../../plugins/xiu-plugin/lib/xiu.js';
 export class configTest extends plugin {
   constructor () {
     super({
