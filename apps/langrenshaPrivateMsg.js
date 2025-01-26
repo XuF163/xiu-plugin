@@ -57,6 +57,7 @@ export class LabgrenshaPrivate extends plugin {
         );
         if (targetPlayer) {
           console.log(`狼人 ${e.user_id} 选择了击杀 ${targetId} 号玩家`);
+          await GameData.addKill(groupId, targetPlayer.user_id);
           e.reply(`你击杀了${targetId}, 请等待天亮`);
           Bot[e.self_id]
             .pickGroup(GameData.getGroupIdByUserId(e.user_id))
@@ -204,6 +205,7 @@ export class LabgrenshaPrivate extends plugin {
     // 使用毒药逻辑
     await GameData.usePotion(groupId, "poison", targetPlayer.user_id);
     logger.mark(`魔法师 ${e.user_id} 使用毒药毒了 ${targetPlayer.user_id}`);
+    await GameData.usePotion(groupId, "poison", targetPlayer.user_id);
     this.e.reply(`你使用了毒药，毒了 ${targetPlayer.user_id}`);
     Bot[e.self_id]
       .pickGroup(GameData.getGroupIdByUserId(e.user_id))
