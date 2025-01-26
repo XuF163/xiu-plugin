@@ -27,7 +27,7 @@ export class LabgrenshaGame extends plugin {
   async startGame(e) {
     let langrenuid = await GameData.getUserIdsByRole(e.group_id, "普通狼人");
     e.reply(
-      "天黑请闭眼！\r\n请【狼人】私聊我选择要杀害的玩家序号\r\n如【#击杀1】\r\n请【预言家】私聊我查验玩家身份\r\n如【#查验1】\r\n请【魔法师】私聊我救人或使用毒药\r\n如【#解药】",
+      "天黑请闭眼！\r\n夜晚时长【2】分钟\r\n请【狼人】私聊我选择要杀害的玩家序号\r\n如【#击杀1】\r\n请【预言家】私聊我查验玩家身份\r\n如【#查验1】\r\n请【魔法师】私聊我救人或使用毒药\r\n如【#解药】",
     );
     //倒计时两分钟
     setTimeout(async () => {
