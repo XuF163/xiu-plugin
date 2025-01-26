@@ -15,7 +15,6 @@ export class LangrengshaPlayer extends plugin {
         { reg: "#加入游戏|#join", fnc: "joinGame" },
         { reg: "#分配职业", fnc: "chooseRole" },
         { reg: "#退出游戏|#leave", fnc: "leaveGame" },
-        { reg: "#正式开始", fnc: "startGame" },
         { reg: "#玩家列表|#list", fnc: "showPlayerList" },
         { reg: "#查看状态|#status", fnc: "showGameStatus" },
       ],
@@ -53,7 +52,7 @@ export class LangrengshaPlayer extends plugin {
       // 定义角色池，按照重要程度排序
       const rolePool = [
         "预言家",
-        "女巫",
+        "魔法师",
         "猎人",
         "守卫",
         "普通狼人",
@@ -131,7 +130,7 @@ export class LangrengshaPlayer extends plugin {
   //         // 定义角色池，按照重要程度排序
   //         const rolePool = [
   //             "预言家",
-  //             "女巫",
+  //             "魔法师",
   //             "猎人",
   //             "守卫",
   //             "普通狼人",
@@ -201,7 +200,7 @@ export class LangrengshaPlayer extends plugin {
   //     // 定义角色池，按照重要程度排序
   //     const rolePool = [
   //       "预言家",
-  //       "女巫",
+  //       "魔法师",
   //       "猎人",
   //       "守卫",
   //       "普通狼人",
@@ -256,7 +255,7 @@ export class LangrengshaPlayer extends plugin {
   //     villager: [
   //       "村民",
   //       "预言家",
-  //       "女巫",
+  //       "魔法师",
   //       "猎人",
   //       "守卫",
   //       "长老",
@@ -314,12 +313,5 @@ export class LangrengshaPlayer extends plugin {
       "请先【私聊】派蒙发送【#我的角色】查看自己的角色\r\n如果大家都准备好了请发 【#正式开始】",
     );
     return true;
-  }
-
-  async startGame(e) {
-    let langrenuid = GameData.getUserIdsByRole(e.group_id, "普通狼人");
-    e.reply(
-      "天黑请闭眼！\r\n请【狼人】私聊我选择要杀害的玩家序号\r\n如【#击杀1】",
-    );
   }
 }
