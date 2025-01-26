@@ -39,55 +39,208 @@ export class LangrengshaPlayer extends plugin {
 
   async chooseRole(e) {
     try {
-        const groupId = e.group_id;
-        const userId = e.user_id;
+      const groupId = e.group_id;
 
-        // 获取当前群组的所有玩家
-        const players = await GameData.getAllRoles(groupId);
-        const playerCount = players.length;
+      // 获取当前群组的所有玩家
+      const players = await GameData.getAllRoles(groupId);
+      const playerCount = players.length;
 
-        // 定义角色池，按照重要程度排序
-        const rolePool = [
-            "预言家",
-            "女巫",
-            "猎人",
-            "守卫",
-            "普通狼人",
-            "长老",
-            "骑士",
-            "白痴",
-            "吹笛者",
-            "丘比特",
-            "纵火犯",
-            "小女孩",
-            "盗贼",
-            "警长",
-            "村民",
-        ];
-
-        // 根据玩家数量动态调整角色池
-        const adjustedRolePool = rolePool.slice(0, playerCount);
-
-         // 检查是否已经有角色
-        const existingRole = await GameData.getPrivateRole(userId);
-        if(existingRole){
-            e.reply("你已经有角色了")
-             return false;
-        }
-        // 随机分配角色
-        const randomIndex = Math.floor(Math.random() * adjustedRolePool.length);
-        const assignedRole = adjustedRolePool[randomIndex];
-
-        // 更新用户角色
-        await GameData.addOrUpdateUserRole(groupId, userId, assignedRole);
-        logger.mark(userId `被分配到 ${assignedRole} `)
-        return true;
-    } catch (error) {
-        console.error("自动分配角色失败:", error);
-        e.reply(`自动分配角色失败: ${error.message}`);
+      if (playerCount === 0) {
+        e.reply("当前群组没有玩家加入游戏，无法分配角色。");
         return false;
+      }
+
+      // 定义角色池，按照重要程度排序
+      const rolePool = [
+        "预言家",
+        "女巫",
+        "猎人",
+        "守卫",
+        "普通狼人",
+        "长老",
+        "骑士",
+        "白痴",
+        "吹笛者",
+        "丘比特",
+        "纵火犯",
+        "小女孩",
+        "盗贼",
+        "警长",
+        "村民",
+      ];
+
+      // 根据玩家数量动态调整角色池
+      const adjustedRolePool = rolePool.slice(0, playerCount);
+
+      if (playerCount > adjustedRolePool.length) {
+        const diff = playerCount - adjustedRolePool.length;
+        for (let i = 0; i < diff; i++) {
+          adjustedRolePool.push("村民");
+        }
+        // e.reply(`玩家数量超过角色数量，请减少玩家或增加角色`);
+        // return false;
+      }
+
+      // 打乱角色池
+      for (let i = adjustedRolePool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [adjustedRolePool[i], adjustedRolePool[j]] = [
+          adjustedRolePool[j],
+          adjustedRolePool[i],
+        ];
+      }
+
+      // 遍历所有玩家并分配角色
+      for (let i = 0; i < players.length; i++) {
+        const player = players[i];
+        const userId = player.user_id;
+        const assignedRole = adjustedRolePool[i];
+        // 更新用户角色
+        await GameData.addOrUpdateUserRole(
+          groupId,
+          userId,
+          assignedRole,
+          i + 1,
+        ); // 传递 playerIndex
+        logger.mark(`${userId} 被分配到 ${assignedRole}`);
+      }
+
+      e.reply(`已为 ${playerCount} 位玩家分配角色，请私聊查看自己的角色`);
+      return true;
+    } catch (error) {
+      console.error("自动分配角色失败:", error);
+      e.reply(`自动分配角色失败: ${error.message}`);
+      return false;
     }
-}
+  }
+
+  //
+  //    async chooseRole(e) {
+  //     try {
+  //         const groupId = e.group_id;
+  //
+  //         // 获取当前群组的所有玩家
+  //         const players = await GameData.getAllRoles(groupId);
+  //         const playerCount = players.length;
+  //
+  //         if (playerCount === 0) {
+  //             e.reply("当前群组没有玩家加入游戏，无法分配角色。");
+  //             return false;
+  //         }
+  //
+  //         // 定义角色池，按照重要程度排序
+  //         const rolePool = [
+  //             "预言家",
+  //             "女巫",
+  //             "猎人",
+  //             "守卫",
+  //             "普通狼人",
+  //             "长老",
+  //             "骑士",
+  //             "白痴",
+  //             "吹笛者",
+  //             "丘比特",
+  //             "纵火犯",
+  //             "小女孩",
+  //             "盗贼",
+  //             "警长",
+  //             "村民",
+  //         ];
+  //
+  //         // 根据玩家数量动态调整角色池
+  //         const adjustedRolePool = rolePool.slice(0, playerCount);
+  //
+  //         if (playerCount > adjustedRolePool.length) {
+  //             const diff = playerCount - adjustedRolePool.length;
+  //             for(let i = 0; i < diff; i++) {
+  //                 adjustedRolePool.push("村民");
+  //             }
+  //            // e.reply(`玩家数量超过角色数量，请减少玩家或增加角色`);
+  //            // return false;
+  //         }
+  //
+  //         // 打乱角色池
+  //         for (let i = adjustedRolePool.length - 1; i > 0; i--) {
+  //             const j = Math.floor(Math.random() * (i + 1));
+  //             [adjustedRolePool[i], adjustedRolePool[j]] = [adjustedRolePool[j], adjustedRolePool[i]];
+  //         }
+  //
+  //
+  //         // 遍历所有玩家并分配角色
+  //         for (let i = 0; i < players.length; i++) {
+  //             const player = players[i];
+  //             const userId = player.user_id;
+  //              const assignedRole = adjustedRolePool[i];
+  //             // 更新用户角色
+  //             await GameData.addOrUpdateUserRole(groupId, userId, assignedRole);
+  //             logger.mark(`${userId} 被分配到 ${assignedRole}`);
+  //         }
+  //
+  //         e.reply(`已为 ${playerCount} 位玩家分配角色，请私聊查看自己的角色`);
+  //         return true;
+  //     } catch (error) {
+  //         console.error("自动分配角色失败:", error);
+  //         e.reply(`自动分配角色失败: ${error.message}`);
+  //         return false;
+  //     }
+  // }
+
+  // async chooseRole(e) {
+  //   try {
+  //     const groupId = e.group_id;
+  //
+  //     // 获取当前群组的所有玩家
+  //     const players = await GameData.getAllRoles(groupId);
+  //     const playerCount = players.length;
+  //
+  //     if (playerCount === 0) {
+  //       e.reply("当前群组没有玩家加入游戏，无法分配角色。");
+  //       return false;
+  //     }
+  //
+  //     // 定义角色池，按照重要程度排序
+  //     const rolePool = [
+  //       "预言家",
+  //       "女巫",
+  //       "猎人",
+  //       "守卫",
+  //       "普通狼人",
+  //       "长老",
+  //       "骑士",
+  //       "白痴",
+  //       "吹笛者",
+  //       "丘比特",
+  //       "纵火犯",
+  //       "小女孩",
+  //       "盗贼",
+  //       "警长",
+  //       "村民",
+  //     ];
+  //
+  //     // 根据玩家数量动态调整角色池
+  //     const adjustedRolePool = rolePool.slice(0, playerCount);
+  //
+  //     // 遍历所有玩家并分配角色
+  //     for (const player of players) {
+  //       const userId = player.user_id;
+  //
+  //       // 随机分配角色
+  //       const randomIndex = Math.floor(Math.random() * adjustedRolePool.length);
+  //       const assignedRole = adjustedRolePool[randomIndex];
+  //
+  //       // 更新用户角色
+  //       await GameData.addOrUpdateUserRole(groupId, userId, assignedRole);
+  //       logger.mark(`${userId} 被分配到 ${assignedRole}`);
+  //     }
+  //
+  //     e.reply(`已为 ${playerCount} 位玩家分配角色，请私聊查看自己的角色`);
+  //     return true;
+  //   } catch (error) {
+  //     console.error("自动分配角色失败:", error);
+  //     e.reply(`自动分配角色失败: ${error.message}`);
+  //     return false;
+  //   }
+  // }
 
   // async chooseRole(e) {
   //   //待重写为自动分配
@@ -148,10 +301,12 @@ export class LangrengshaPlayer extends plugin {
     // let playerList = players.map(player => {
     //   this.e.reply( `${player.user_id}：${player.role}`)
     // })
-
-    const playerList = players.map((player, index) => {
-      logger.mark(player.user_id, player.role, index + 1);
-      return [segment.at(player.user_id), `，序号为${index + 1}\r\n`];
+    const playerList = players.map((player) => {
+      logger.mark(player.user_id, player.role, player.player_index);
+      return [
+        segment.at(player.user_id),
+        `，序号为${player.player_index}\r\n`, // 使用 player.player_index
+      ];
     });
 
     e.reply([`群组 ${e.group_id} 的玩家信息：\n`].concat(...playerList));
@@ -162,7 +317,7 @@ export class LangrengshaPlayer extends plugin {
   }
 
   async startGame(e) {
-    let langrenuid = gameData.getUserIdsByRole(e.group_id, "普通狼人");
+    let langrenuid = GameData.getUserIdsByRole(e.group_id, "普通狼人");
     e.reply(
       "天黑请闭眼！\r\n请【狼人】私聊我选择要杀害的玩家序号\r\n如【#击杀1】",
     );
