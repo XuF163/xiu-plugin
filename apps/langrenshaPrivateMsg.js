@@ -9,6 +9,7 @@ export class LabgrenshaPrivate extends plugin {
       event: "message",
       /** 优先级，数字越小等级越高 */
       rule: [
+        { reg: "#我的角色", fnc: "showMyRole" },
         // 夜晚指令（私聊）
         { reg: "#击杀 (.+)", fnc: "wolfKill" },
         { reg: "#查验 (.+)", fnc: "seerCheck" },
@@ -22,5 +23,30 @@ export class LabgrenshaPrivate extends plugin {
         { reg: "#装傻", fnc: "idiotActDumb" },
       ],
     });
+  }
+
+  async showMyRole(e) {
+    const role = await GameData.getPrivateRole(e.user_id);
+    if (role) {
+      this.e.reply(`你的角色是${role}`);
+    } else {
+      this.e.reply("根本不是人");
+    }
+    return true;
+  }
+  async wolfKill(e) {
+    //检查是否为狼人
+    if (GameData.isWolf(e.group_id, e.user_id)) {
+      //检查是否有击杀二字并取序号
+      const match = e.msg.match(/击杀\s*(\d+)/);
+      if (match) {
+        const targetId = parseInt(match[1], 10); // 将提取的序号转换为整数
+        console.log(`狼人 ${e.user_id} 选择了击杀 ${targetId} 号玩家`);
+        return true;
+      }
+    } else {
+      this.e.reply("你不是狼人");
+      return false;
+    }
   }
 }

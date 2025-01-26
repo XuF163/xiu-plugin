@@ -16,10 +16,10 @@ export class lrs extends plugin {
   }
 
   async ma(e) {
-    console.log(e.user_id)
+    console.log("用户id检查", e.user_id);
+    console.log("群组id", e.group_id);
     try {
-
-      this.e.reply(e.isGroup?"群":"私聊");
+      this.e.reply(e.isGroup ? "群" : "私聊");
       // 直接使用导入的单例实例 gameData
       await GameData.addRole("group123", "user1", "狼人1");
       await GameData.addRole("group123", "user2", "村民2");
