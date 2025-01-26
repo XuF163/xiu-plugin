@@ -1,29 +1,29 @@
 // import Config from '../../../plugins/xiu-plugin/lib/config.js'
 // import Database from '../../../plugins/xiu-plugin/lib/sql.js';
-import xiu from   '../../../plugins/xiu-plugin/lib/xiu.js';
+import xiu from "../../../plugins/xiu-plugin/lib/xiu.js";
 export class configTest extends plugin {
-  constructor () {
+  constructor() {
     super({
       /** 功能名称 */
-      name: '1',
+      name: "1",
 
-      event: 'message',
+      event: "message",
       /** 优先级，数字越小等级越高 */
 
       rule: [
-        { reg: 'asdfg', fnc: 'tst'},{reg:'database',fnc:'datatest'}
-      ]
-    })
+        { reg: "asdfg", fnc: "tst" },
+        { reg: "database", fnc: "datatest" },
+      ],
+    });
   }
 
   /**
    * updateCopyPlugin
    * @returns {Promise<boolean>}
    */
-  async tst () {
-    console.log(`Config.testid`)
-      await this.e.reply(Config.testid)
-
+  async tst() {
+    console.log("Config.testid");
+    await this.e.reply(Config.testid);
   }
 
   getRandomUserData() {
@@ -31,8 +31,9 @@ export class configTest extends plugin {
     const randomEmail = `${randomUsername}@example.com`;
     return { username: randomUsername, email: randomEmail };
   }
-  async datatest(){
-    const db = Database;  // 使用单例实例
+
+  async datatest() {
+    const db = Database; // 使用单例实例
 
     const createTableSQL = `
         CREATE TABLE IF NOT EXISTS users (
@@ -44,13 +45,13 @@ export class configTest extends plugin {
     `;
 
     try {
-        // 使用 query 方法执行 SQL 语句
-        await db.query(createTableSQL);
-        console.log('Table "users" created successfully');
+      // 使用 query 方法执行 SQL 语句
+      await db.query(createTableSQL);
+      console.log('Table "users" created successfully');
     } catch (error) {
-        console.error('Error creating table:', error.message);
+      console.error("Error creating table:", error.message);
     }
-     const { username, email } = this.getRandomUserData();
+    const { username, email } = this.getRandomUserData();
 
     const insertSQL = `
         INSERT INTO users (username, email)
@@ -58,15 +59,14 @@ export class configTest extends plugin {
     `;
 
     try {
-        // 执行插入数据的 SQL 语句
-        await db.query(insertSQL, [username, email]);
-        console.log(`Inserted random user: ${username}, email: ${email}`);
+      // 执行插入数据的 SQL 语句
+      await db.query(insertSQL, [username, email]);
+      console.log(`Inserted random user: ${username}, email: ${email}`);
     } catch (error) {
-        console.error('Error inserting random data:', error.message);
+      console.error("Error inserting random data:", error.message);
     } finally {
-        // 可选：插入完成后断开数据库连接
-        // await db.disconnect();
+      // 可选：插入完成后断开数据库连接
+      // await db.disconnect();
     }
   }
 }
-

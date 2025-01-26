@@ -1,8 +1,5 @@
-dataBase_Target: 'mysql.sqlpub.com'
-dataBase_Port: '3306'
-dataBase_PassWord: 'WPPY1GA8EPoDf5bE'
-dataBase_User: 'root123r'
-dataBase_Name: 'datadatadata1234'
-
-
-
+dataBase_Target: "mysql.sqlpub.com"
+dataBase_Port: "3306"
+dataBase_PassWord: "WPPY1GA8EPoDf5bE"
+dataBase_User: "root123r"
+dataBase_Name: "datadatadata1234"
