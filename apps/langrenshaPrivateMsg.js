@@ -212,4 +212,141 @@ export class LabgrenshaPrivate extends plugin {
       .sendMsg(`魔法师使用了毒药`);
     return true;
   }
+
+  async witchNoSkill(e) {
+    console.log(`当前用户ID: ${e.user_id}`);
+    const groupId = await GameData.getGroupIdByUserId(e.user_id);
+    const role = await GameData.getRole(groupId, e.user_id);
+    console.log(`当前用户角色: ${role}`);
+
+    if (role !== "魔法师") {
+      this.e.reply("你不是魔法师，无法使用技能。");
+      return false;
+    }
+
+    // 检查是否已经使用过毒药
+    if (await GameData.hasUsedPotion(groupId, "noSkill")) {
+      this.e.reply("你今晚已经使用过技能了。");
+      return false;
+    }
+
+    // 使用技能逻辑
+    await GameData.usePotion(groupId, "noSkill", e.user_id);
+    logger.mark(`魔法师 ${e.user_id} 使用了技能`);
+    this.e.reply(`你选择了不使用技能`);
+    Bot[e.self_id]
+      .pickGroup(GameData.getGroupIdByUserId(e.user_id))
+      .sendMsg(`魔法师选择了不使用技能`);
+    return true;
+  }
+
+  async hunterShoot(e) {
+    console.log(`当前用户ID: ${e.user_id}`);
+    const groupId = await GameData.getGroupIdByUserId(e.user_id);
+    const role = await GameData.getRole(groupId, e.user_id);
+    console.log(`当前用户角色: ${role}`);
+
+    if (role !== "猎人") {
+      this.e.reply("你不是猎人，无法使用开枪技能。");
+      return false;
+    }
+
+    // 检查猎人是否已经死亡
+    //   const isHunterAlive = await GameData.isPlayerAlive(groupId, e.user_id);
+    //   if (isHunterAlive) {
+    //     this.e.reply("你还活着，不能使用开枪技能。");
+    //     return false;
+    //   }
+
+    const match = e.msg.match(/开枪\s*(\d+)/);
+    if (!match) {
+      this.e.reply("请使用【#开枪 目标序号】的格式发送指令");
+      return false;
+    }
+    const targetId = parseInt(match[1], 10); // 将提取的序号转换为整数
+    // 获取当前群组的所有玩家
+    const players = await GameData.getAllRoles(groupId);
+    // 检查目标玩家是否存在
+    const targetPlayer = players.find(
+      (player) => player.player_index === targetId,
+    );
+    if (!targetPlayer) {
+      this.e.reply(`目标玩家 ${targetId} 不存在`);
+      return false;
+    }
+
+    // 开枪逻辑
+    // await GameData.removeRole(groupId, targetPlayer.user_id);
+    await GameData.addKill(groupId, targetPlayer.user_id);
+    logger.mark(`猎人 ${e.user_id} 开枪射击了 ${targetPlayer.user_id}`);
+    this.e.reply(`你开枪射击了 ${targetPlayer.user_id}`);
+    Bot[e.self_id]
+      .pickGroup(GameData.getGroupIdByUserId(e.user_id))
+      .sendMsg(`猎人开枪射击了一名玩家`);
+    return true;
+  }
+
+  async guardProtect(e) {
+    console.log(`当前用户ID: ${e.user_id}`);
+    const groupId = await GameData.getGroupIdByUserId(e.user_id);
+    const role = await GameData.getRole(groupId, e.user_id);
+    console.log(`当前用户角色: ${role}`);
+
+    if (role !== "守卫") {
+      this.e.reply("你不是守卫，无法使用守护技能。");
+      return false;
+    }
+
+    const match = e.msg.match(/守护\s*(\d+)/);
+    if (!match) {
+      this.e.reply("请使用【#守护 目标序号】的格式发送指令");
+      return false;
+    }
+    const targetId = parseInt(match[1], 10); // 将提取的序号转换为整数
+    // 获取当前群组的所有玩家
+    const players = await GameData.getAllRoles(groupId);
+    // 检查目标玩家是否存在
+    const targetPlayer = players.find(
+      (player) => player.player_index === targetId,
+    );
+    if (!targetPlayer) {
+      this.e.reply(`目标玩家 ${targetId} 不存在`);
+      return false;
+    }
+
+    // 守护逻辑
+    await GameData.setGuardProtect(groupId, targetPlayer.user_id);
+    logger.mark(`守卫 ${e.user_id} 守护了 ${targetPlayer.user_id}`);
+    this.e.reply(`你守护了 ${targetPlayer.user_id}`);
+    Bot[e.self_id]
+      .pickGroup(GameData.getGroupIdByUserId(e.user_id))
+      .sendMsg(`守卫守护了一名玩家`);
+    return true;
+  }
+
+  //白痴
+  async idiotActDumb(e) {
+    console.log(`当前用户ID: ${e.user_id}`);
+    const groupId = await GameData.getGroupIdByUserId(e.user_id);
+    const role = await GameData.getRole(groupId, e.user_id);
+    console.log(`当前用户角色: ${role}`);
+
+    if (role !== "白痴") {
+      this.e.reply("你不是白痴，无法使用装傻技能。");
+      return false;
+    }
+    const idiotActDumb = await GameData.getIdiotActDumb(groupId);
+    if (idiotActDumb) {
+      this.e.reply("你已经使用过装傻技能了。");
+      return false;
+    }
+
+    await GameData.setIdiotActDumb(groupId, e.user_id);
+    logger.mark(`白痴 ${e.user_id} 发动了装傻技能`);
+    this.e.reply("你发动了装傻技能，今晚不会被放逐");
+    Bot[e.self_id]
+      .pickGroup(GameData.getGroupIdByUserId(e.user_id))
+      .sendMsg(`白痴发动了装傻技能`);
+    return true;
+  }
 }

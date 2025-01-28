@@ -27,7 +27,7 @@ export class LabgrenshaGame extends plugin {
   async startGame(e) {
     let langrenuid = await GameData.getUserIdsByRole(e.group_id, "普通狼人");
     e.reply(
-      "天黑请闭眼！\r\n夜晚时长【2】分钟\r\n请【狼人】私聊我选择要杀害的玩家序号\r\n如【#击杀1】\r\n请【预言家】私聊我查验玩家身份\r\n如【#查验1】\r\n请【魔法师】私聊我救人或使用毒药\r\n如【#解药】",
+      "天黑请闭眼！\r\n夜晚时长【2】分钟\r\n请【狼人】私聊我选择要杀害的玩家序号\r\n如【#击杀1】\r\n请【预言家】私聊我查验玩家身份\r\n如【#查验1】\r\n请【魔法师】私聊我救人或使用毒药\r\n如【#解药 1】\\r\\n请【守卫】私聊我选择守护的人如【#守护 1】\\r\\n请【白痴】私聊我选择装傻【#装傻】",
     );
     //倒计时两分钟
     setTimeout(async () => {
@@ -36,8 +36,15 @@ export class LabgrenshaGame extends plugin {
       const killQueue = await GameData.getKillList(e.group_id);
       console.log(`killQueue: ${killQueue}`);
 
+      const guardProtect = await GameData.getGuardProtect(e.group_id);
+      console.log(`killQueue: ${killQueue}`);
+      console.log(`guardProtect: ${guardProtect}`);
+
       if (killQueue && killQueue.length > 0) {
         let killListMessage = "昨晚被击杀的玩家：\r\n";
+        if (guardProtect) {
+          killQueue = killQueue.filter((userId) => userId !== guardProtect);
+        }
         for (const userId of killQueue) {
           const user = await GameData.getRole(e.group_id, userId);
           killListMessage += `${user} \r\n`;
@@ -126,7 +133,14 @@ export class LabgrenshaGame extends plugin {
     if (banishedPlayer) {
       const banishedUser = playerMap[banishedPlayer];
       if (banishedUser) {
-        voteStatusMessage += `\n白天投票放逐：${banishedUser.name}`;
+        const idiotActDumb = await GameData.getIdiotActDumb(groupId);
+        if (idiotActDumb === banishedUser.user_id) {
+          voteStatusMessage += `\n白痴发动了装傻技能，不会被放逐`;
+          await GameData.resetIdiotActDumb(groupId);
+        } else {
+          voteStatusMessage += `\n白天投票放逐：${banishedUser.name}`;
+          await GameData.removeRole(groupId, banishedUser.user_id);
+        }
       }
     } else {
       voteStatusMessage += "\n白天投票无人被放逐";
