@@ -83,10 +83,10 @@ export class LabgrenshaPrivate extends plugin {
   //     return false;
   //   }
   // }
-async wolfKill(e) {
+  async wolfKill(e) {
     await Werewolf.wolfKill(e);
-    return true
-}
+    return true;
+  }
   // async seerCheck(e) {
   //   if (!e.isGroup) {
   //     e.reply("请在群聊中使用查验技能");
@@ -135,7 +135,7 @@ async wolfKill(e) {
 
   async seerCheck(e) {
     await seer.seerCheck(e);
-    return true
+    return true;
   }
 
   // async witchSave(e) {
@@ -183,7 +183,7 @@ async wolfKill(e) {
   // }
   async witchSave(e) {
     await Witch.witchSave(e);
-    return true
+    return true;
   }
 
   // async witchPoison(e) {
@@ -233,7 +233,7 @@ async wolfKill(e) {
 
   async witchPoison(e) {
     await Witch.witchPoison(e);
-    return true
+    return true;
   }
 
   // async witchNoSkill(e) {
@@ -265,7 +265,7 @@ async wolfKill(e) {
 
   async witchNoSkill(e) {
     await Witch.witchNoSkill(e);
-    return true
+    return true;
   }
 
   // async hunterShoot(e) {
@@ -313,10 +313,10 @@ async wolfKill(e) {
   //     .sendMsg(`猎人开枪射击了一名玩家`);
   //   return true;
   // }
-async hunterShoot(e) {
-  await hunter.hunterShoot(e);
-  return true
-}
+  async hunterShoot(e) {
+    await hunter.hunterShoot(e);
+    return true;
+  }
   // async guardProtect(e) {
   //   console.log(`当前用户ID: ${e.user_id}`);
   //   const groupId = await GameData.getGroupIdByUserId(e.user_id);
@@ -357,12 +357,12 @@ async hunterShoot(e) {
 
   async guardProtect(e) {
     await Guard.guardProtect(e);
-    return true
+    return true;
   }
-async idiotActDumb(e) {
+  async idiotActDumb(e) {
     await Idiot.idiotActDumb(e);
-    return true
-}
+    return true;
+  }
   //白痴
   // async idiotActDumb(e) {
   //   console.log(`当前用户ID: ${e.user_id}`);
