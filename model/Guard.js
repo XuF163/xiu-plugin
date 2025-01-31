@@ -1,7 +1,7 @@
 // GuardGameData.js
-import GameData from "../../../plugins/xiu-plugin/lib/GameData.js";
+import { GameData } from "../../../plugins/xiu-plugin/lib/GameData.js";
 
-class GuardGameData extends GameData {
+class Guard extends GameData {
   constructor(dbPath) {
     super(dbPath);
   }

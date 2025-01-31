@@ -1,5 +1,5 @@
 // WitchGameData.js
-import GameData from "../../../plugins/xiu-plugin/lib/GameData.js";
+import { GameData } from "../../../plugins/xiu-plugin/lib/GameData.js";
 
 class WitchGameData extends GameData {
   constructor(dbPath) {

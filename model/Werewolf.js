@@ -1,6 +1,6 @@
-import GameData from "../../../plugins/xiu-plugin/lib/GameData.js";
+import { GameData } from "../../../plugins/xiu-plugin/lib/GameData.js";
 
-class WerewolfGameData extends GameData {
+class Werewolf extends GameData {
   constructor(dbPath) {
     super(dbPath);
   }
@@ -60,6 +60,4 @@ class WerewolfGameData extends GameData {
   }
 }
 
-export default new WerewolfGameData(
-  "./plugins/xiu-plugin/data/gangrenous/game.db",
-);
+export default new Werewolf("./plugins/xiu-plugin/data/gangrenous/game.db");
