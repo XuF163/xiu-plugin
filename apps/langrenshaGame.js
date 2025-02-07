@@ -1,11 +1,11 @@
 import GameData from "../lib/GameData.js";
 import plugin from "../../../lib/plugins/plugin.js";
-
+import xiubutton from "../model/button.js";
 export class LabgrenshaGame extends plugin {
   constructor() {
     super({
       /** 功能名称 */
-      name: "1",
+      name: "LabgrenshaGame",
       event: "message",
       /** 优先级，数字越小等级越高 */
       rule: [
@@ -27,7 +27,7 @@ export class LabgrenshaGame extends plugin {
   async startGame(e) {
     let langrenuid = await GameData.getUserIdsByRole(e.group_id, "普通狼人");
     e.reply(
-      "天黑请闭眼！\r\n夜晚时长【2】分钟\r\n请【狼人】私聊我选择要杀害的玩家序号\r\n如【#击杀1】\r\n请【预言家】私聊我查验玩家身份\r\n如【#查验1】\r\n请【魔法师】私聊我救人或使用毒药\r\n如【#解药 1】\r\n请【守卫】私聊我选择守护的人如【#守护 1】\r\n请【白痴】私聊我选择装傻【#装傻】",
+      ["天黑请闭眼！\r\n夜晚时长【2】分钟\r\n请【狼人】私聊我选择要杀害的玩家序号\r\n如【#击杀1】\r\n请【预言家】私聊我查验玩家身份\r\n如【#查验1】\r\n请【魔法师】私聊我救人或使用毒药\r\n如【#解药 1】\r\n请【守卫】私聊我选择守护的人如【#守护 1】\r\n请【白痴】私聊我选择装傻【#装傻】",xiubutton.xiuhelp()],
     );
     //倒计时两分钟
     setTimeout(async () => {

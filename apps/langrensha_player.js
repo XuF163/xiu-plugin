@@ -1,7 +1,7 @@
 import GameData from "../lib/GameData.js";
 import plugin from "../../../lib/plugins/plugin.js";
 import gameData from "../lib/GameData.js";
-
+import xiubutton from "../model/button.js";
 export class LangrengshaPlayer extends plugin {
   constructor() {
     super({
@@ -21,7 +21,7 @@ export class LangrengshaPlayer extends plugin {
     });
   }
   async showHelp(e) {
-    this.e.reply("狼人杀规则");
+    this.e.reply(["狼人杀规则",xiubutton.xiuhelp()]);
     return true;
   }
 
